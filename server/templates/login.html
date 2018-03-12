@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Login
+{% endblock %}
+
+{% block content %}
+  <h1>Login</h1>
+
+  <div class="form">
+    <form id="form">
+      <input type="text" id="username" placeholder="username">
+      <input type="password" id="password" placeholder="password">
+      <input type="submit" name="" value="submit">
+    </form>
+
+  </div>
+
+  <script type="text/javascript">
+  $('form').on('submit', function (e) {
+    e.preventDefault()
+    console.log('CLicked')
+    var un = document.getElementById('username').value
+    var ps = document.getElementById('password').value
+    console.log(un, ps)
+
+    jQuery.ajax({
+      url: '/login',
+      type: 'post',
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      data: JSON.stringify({ un: un, ps: ps }),
+      success: function (data) {
+        console.log('Success')
+        console.log(data)
+        window.location.replace('/')
+
+      },
+      error: function (err) {
+        console.log('Error')
+        console.log(err)
+      }
+    })
+    $('#username').val('')
+    $('#password').val('')
+  })
+  </script>
+{% endblock %}

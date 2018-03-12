@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from flask_pymongo import PyMongo
 
 from config import Configuration
@@ -14,9 +14,12 @@ def index():
     return render_template('homepage.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return 'login'
+    if request.method == 'POST':
+        return jsonify({"message": request.get_json()})
+    else:
+        return render_template('login.html')
 
 @app.route('/register')
 def register():
