@@ -23,7 +23,10 @@ def login():
 
 @app.route('/register')
 def register():
-    return 'register'
+    if request.method == 'POST':
+        return jsonify({"message": request.get_json()})
+    else:
+        return render_template('register.html')
 
 if __name__ == '__main__':
     app.run()
