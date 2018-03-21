@@ -14,6 +14,8 @@ app.config.from_object(Configuration)
 # Init Mongo
 mongo = PyMongo(app)
 
+
+
 @app.route('/')
 def index():
     return render_template('homepage.html')
