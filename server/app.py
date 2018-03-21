@@ -14,7 +14,22 @@ app.config.from_object(Configuration)
 # Init Mongo
 mongo = PyMongo(app)
 
+def token_required(f):
+    @wraps(f)
+    def decorate(*args, **kwargs):
+        try:
+            token = request.headers['x-access-token']
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            users = mongo.db.users
+            current_user = users.find_one({'public_id': data['public_id']})
+        except:
+            return jsonify({
+                'message': 'Token is invalid or missing',
+                'status': 'error'
+            }), 401
 
+        return f(current_user, *args, **kwargs)
+    return decorate
 
 @app.route('/')
 def index():
