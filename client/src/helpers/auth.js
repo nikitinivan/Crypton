@@ -12,6 +12,21 @@ export function register(username, password) {
   }).then((response) => {
     console.log(response.data['message'])
     alert(`User ${username}`)
-    router.go('/')
+    router.push('/login')
+  })
+}
+export function testroute() {
+  router.push('/')
+}
+
+export function login(username, password) {
+  const url = `${BASE_URL}/login`
+  return axios.post(url, {
+    'username': username,
+    'password': password
+  }).then((response) => {
+    localStorage.setItem(TOKEN, response.data['token'])
+    router.push('/')
+
   })
 }
