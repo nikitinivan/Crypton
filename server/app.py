@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, make_response
 from flask_pymongo import PyMongo
+from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import Configuration
@@ -10,6 +11,8 @@ import datetime
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
+
+CORS(app)
 
 # Init Mongo
 mongo = PyMongo(app)
