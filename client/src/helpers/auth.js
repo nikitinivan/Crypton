@@ -3,8 +3,13 @@ import router from '../router'
 import axios from 'axios'
 
 const BASE_URL = 'http://127.0.0.1:5000'
+const TOKEN = 'token'
 
-export function register(username, password) {
+function getToken () {
+  return localStorage.getItem(TOKEN)
+}
+
+export function register (username, password) {
   const url = `${BASE_URL}/register`
   return axios.post(url, {
     'username': username,
@@ -15,11 +20,12 @@ export function register(username, password) {
     router.push('/login')
   })
 }
-export function testroute() {
+
+export function testroute () {
   router.push('/')
 }
 
-export function login(username, password) {
+export function login (username, password) {
   const url = `${BASE_URL}/login`
   return axios.post(url, {
     'username': username,
@@ -27,6 +33,30 @@ export function login(username, password) {
   }).then((response) => {
     localStorage.setItem(TOKEN, response.data['token'])
     router.push('/')
-
   })
+}
+
+export function logout () {
+  localStorage.removeItem(TOKEN)
+  router.push('/')
+}
+
+export function isLoggedIn () {
+  const token = getToken()
+  return !!token && !isTokenExpired(token)
+}
+
+function getTokenExpirationDate (encodedToken) {
+  const token = decode(encodedToken)
+  if (!token.exp) { return null }
+
+  const date = new Date(0)
+  date.setUTCSeconds(token.exp)
+
+  return date
+}
+
+function isTokenExpired (token) {
+  const expirationDate = getTokenExpirationDate(token)
+  return expirationDate < new Date()
 }
